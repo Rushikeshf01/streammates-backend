@@ -1,0 +1,8 @@
+# Django 
+*.pyc
+__pycache__
+media
+
+# Environments
+.venv
+.env
