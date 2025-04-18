@@ -1,6 +1,7 @@
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from .models import User
+User = get_user_model()
 
 class UserSerializers(serializers.ModelSerializer):
     
@@ -12,7 +13,7 @@ class UserSerializers(serializers.ModelSerializer):
         fields = ('first_name', 'last_name', 'email','username', 'password', 'password2')
 
     def validate(self, attrs):
-        if attrs['password'] != attrs['confirm_password']:
+        if attrs['password'] != attrs['password2']:
             raise serializers.ValidationError('password not matched')
         return attrs
 
