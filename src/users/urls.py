@@ -17,8 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from .views import CustomTokenObtainPairView
+from rest_framework_simplejwt.views import TokenRefreshView
+from .views import CustomTokenObtainPairView, VerifyLoginView, Logoutview
 from rest_framework.routers import SimpleRouter
 
 from . import views
@@ -29,4 +29,6 @@ router.register('users', views.UserViewSet, basename='users')
 urlpatterns = [
     path('token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('auth/me/', VerifyLoginView.as_view(), name='verify_me'),
+    path('auth/logout/', Logoutview.as_view(), name='logout'),
 ] + router.urls
