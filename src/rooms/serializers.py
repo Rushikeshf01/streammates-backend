@@ -20,8 +20,9 @@ class RoomSerializers(serializers.ModelSerializer):
     
     def create(self, validated_data):
         room_code = generate_room_code()
-        validated_data.update({"room_code": room_code})
-        print(room_code)
+        print(validated_data)
+        user = self.context['request'].user
+        validated_data.update({"room_code": room_code, "host": user })
         room = Room.objects.create(**validated_data)
         return room
 
