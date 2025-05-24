@@ -1,7 +1,10 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
+from django.db import IntegrityError
 from rest_framework import serializers
-
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.exceptions import ValidationError
 from .models import Room, RoomParticipant
 from .utils.room_code_generator import generate_room_code
 
@@ -37,8 +40,16 @@ class RoomParticipantSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         code = validated_data.get('room_code', None)
-        room = get_object_or_404(Room, room_code=code)
+        room_code = get_object_or_404(Room, room_code=code)
         # validated_data.update({"room_code": code})
         user = self.context['request'].user
-        room_participants = RoomParticipant.objects.create(participant=user, room=room)
-        return room_participants
+
+        try:
+            room_participants, created = RoomParticipant.objects.get_or_create(participant=user, room=room_code)
+            # if not created:
+            #     raise ValidationError({'detail': 'You have already joined this room.'})
+            # else:
+            #     room_participants = RoomParticipant.objects.create(participant=user, room=room_code)
+            return room_participants
+        except IntegrityError as e:
+            raise ValidationError({'detail': 'A database error occurred.'})

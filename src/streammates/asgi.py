@@ -16,13 +16,15 @@ from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.security.websocket import AllowedHostsOriginValidator
 from channels.auth import AuthMiddlewareStack
 
+from rooms.routing import websocket_urlpatterns
+
 application = ProtocolTypeRouter({
     "http": django_asgi_app,
     "websocket": AllowedHostsOriginValidator(
         AuthMiddlewareStack(
-            URLRouter([
-                # your websocket url patterns comes here....
-            ])
+            URLRouter(
+                websocket_urlpatterns
+            )
         )
     ),
 

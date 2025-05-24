@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from .models import Room, RoomParticipant
-from .serializers import RoomSerializers,RoomParticipantSerializer
+from .serializers import RoomSerializers, RoomParticipantSerializer
 
 # Create your views here.
 class RoomViewSet(ModelViewSet):
