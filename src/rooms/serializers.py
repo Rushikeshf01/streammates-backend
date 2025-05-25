@@ -40,12 +40,15 @@ class RoomParticipantSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         code = validated_data.get('room_code', None)
-        room_code = get_object_or_404(Room, room_code=code)
-        # validated_data.update({"room_code": code})
+        try:
+            room = Room.objects.get(room_code=code)
+        except Room.DoesNotExist:
+            raise ValidationError({'detail': 'Invalid room code.'})
+
         user = self.context['request'].user
 
         try:
-            room_participants, created = RoomParticipant.objects.get_or_create(participant=user, room=room_code)
+            room_participants, created = RoomParticipant.objects.get_or_create(participant=user, room=room)
             # if not created:
             #     raise ValidationError({'detail': 'You have already joined this room.'})
             # else:
